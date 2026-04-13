@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AICF Dashboard: Latent Flow Dynamics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #020617; color: #f8fafc; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .dashboard { display: grid; grid-template-columns: 440px 1fr; gap: 25px; max-width: 1550px; width: 100%; background: #0f172a; padding: 30px; border-radius: 12px; border: 1px solid #1e293b; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+        .controls { background: #1e293b; padding: 20px; border-radius: 8px; overflow-y: auto; max-height: 85vh; border: 1px solid #334155; }
+        .viz-container { display: flex; flex-direction: column; gap: 20px; }
+        .chart-box { background: #020617; padding: 15px; border-radius: 8px; height: 500px; border: 1px solid #1e293b; }
+        h2 { color: #38bdf8; margin-top: 24px; margin-bottom: 5px; border-bottom: 1px solid #334155; padding-bottom: 8px; font-size: 1.05em; text-transform: uppercase; letter-spacing: 0.05em; }
+        h2:first-child { margin-top: 0; }
+        .knob-group { margin-bottom: 22px; }
+        label { display: block; font-size: 0.9em; margin-bottom: 4px; color: #cbd5e1; font-weight: 600; }
+        .layman { display: block; font-size: 0.78em; color: #94a3b8; font-style: italic; margin-bottom: 8px; line-height: 1.2; }
+        input[type=range] { width: 100%; accent-color: #38bdf8; cursor: pointer; }
+        .val { float: right; color: #38bdf8; font-family: 'JetBrains Mono', monospace; font-size: 0.85em; font-weight: bold; }
+        .header-math { background: #020617; width: 100%; max-width: 1550px; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #1e293b; text-align: center; }
+        .regimes-box { margin-top: 20px; padding: 15px; background: #020617; border-radius: 8px; border: 1px solid #334155; font-size: 0.85em; color: #94a3b8; line-height: 1.6; }
+        .regime-item { margin-bottom: 12px; }
+        .regime-tag { color: #38bdf8; font-weight: bold; text-transform: uppercase; font-size: 0.9em; margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="header-math">
+    \[ \frac{dF}{dt} = -\kappa[F(t) - F_0] + \beta^I \psi^I(t) + \beta^P \psi^P(t) + \beta^D \psi^D(t) + \sigma^f \cdot \xi(t) \]
+</div>
+
+<div class="dashboard">
+    <div class="controls">
+        <h2>System Dynamics</h2>
+        <div class="knob-group">
+            <label>\( \kappa \) (Mean-Reversion Rate) <span class="val" id="v-kappa">0.50</span></label>
+            <span class="layman">Mental Gravity: How fast your focus drains when task input stops.</span>
+            <input type="range" id="kappa" min="0.01" max="2.0" step="0.01" value="0.5">
+        </div>
+        <div class="knob-group">
+            <label>\( \sigma^f \) (Process Noise Scale) <span class="val" id="v-sigma">0.10</span></label>
+            <span class="layman">Distractions: The volume of random internal/external jitter.</span>
+            <input type="range" id="sigma" min="0" max="0.5" step="0.01" value="0.1">
+        </div>
+
+        <h2>Layer Coupling strengths (\( \beta \))</h2>
+        <div class="knob-group">
+            <label>\( \beta^I \) (Informational) <span class="val" id="v-betaI">2.50</span></label>
+            <span class="layman">Goal Power: How much task clarity fuels your flow.</span>
+            <input type="range" id="betaI" min="0" max="5" step="0.1" value="2.5">
+        </div>
+        <div class="knob-group">
+            <label>\( \beta^P \) (Inferential) <span class="val" id="v-betaP">3.50</span></label>
+            <span class="layman">Confidence Power: How much inner certainty fuels your flow.</span>
+            <input type="range" id="betaP" min="0" max="5" step="0.1" value="3.5">
+        </div>
+
+        <h2>Inferential Components</h2>
+        <div class="knob-group">
+            <label>\( \gamma \) (Policy Precision) <span class="val" id="v-gamma">20.0</span></label>
+            <span class="layman">Choice Sharpness: How 100% sure you are of your next move.</span>
+            <input type="range" id="gamma" min="1" max="50" step="1" value="20">
+        </div>
+        <div class="knob-group">
+            <label>\( \tau \) (Planning Depth) <span class="val" id="v-tau">5.0</span></label>
+            <span class="layman">Thinking Distance: How many steps ahead you are planning.</span>
+            <input type="range" id="tau" min="0.1" max="20" step="0.1" value="5">
+        </div>
+
+        <h2>Neural & Context Layers</h2>
+        <div class="knob-group">
+            <label>\( \psi^I \) (Means-Ends Fusion) <span class="val" id="v-psiI">0.85</span></label>
+            <span class="layman">Task Clarity: How well your actions actually match your goals.</span>
+            <input type="range" id="psiI" min="0" max="1" step="0.01" value="0.85">
+        </div>
+        <div class="knob-group">
+            <label>\( \psi^D \) (Dynamical Agility) <span class="val" id="v-psiD">0.75</span></label>
+            <span class="layman">Brain Flexibility: How fluidly your brain switches modes.</span>
+            <input type="range" id="psiD" min="0" max="1" step="0.01" value="0.75">
+        </div>
+    </div>
+
+    <div class="viz-container">
+        <div class="chart-box">
+            <canvas id="flowChart"></canvas>
+        </div>
+
+        <div class="regimes-box">
+            <div style="font-size: 1.1em; color: #38bdf8; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 5px;">Cognitive Regimes</div>
+            <div class="regime-item">
+                <span class="regime-tag">Flow:</span> Confident action with optimal strategic foresight (\( \tau \approx \tau^* \)). Strategic benefit outweighs mental cost.
+            </div>
+            <div class="regime-item">
+                <span class="regime-tag">Anxiety:</span> "Brain Freeze" via excessive depth (\( \tau > \tau^* \)). Over-thinking the future crashes your inner precision.
+            </div>
+            <div class="regime-item">
+                <span class="regime-tag">Hyperfocus:</span> High confidence but "Myopic" (\( \tau \ll \tau^* \)). Absorbed in the now, but losing the big picture.
+            </div>
+            <div class="regime-item">
+                <span class="regime-tag">Boredom:</span> Shallow planning depth and low task engagement. Insufficient strategic depth to maintain focus.
+            </div>
+            <div style="margin-top: 15px; padding-top: 10px; border-top: 1px dashed #334155; font-family: monospace; color: #38bdf8;">
+                \(\psi^P = \min(\gamma \cdot (1 - e^{-\tau/\tau_0}) \cdot e^{-\tau/\tau_{max}} / 15, 1.0)\)
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const dt = 0.05;
+    const steps = 300;
+    const tau0 = 2.5; 
+    const tauMax = 12.0; 
+    let chart;
+
+    function simulate() {
+        const kappa = parseFloat(document.getElementById('kappa').value);
+        const sigma = parseFloat(document.getElementById('sigma').value);
+        const betaI = parseFloat(document.getElementById('betaI').value);
+        const betaP = parseFloat(document.getElementById('betaP').value);
+        const gamma = parseFloat(document.getElementById('gamma').value);
+        const tau = parseFloat(document.getElementById('tau').value);
+        const psiI = parseFloat(document.getElementById('psiI').value);
+        const psiD = parseFloat(document.getElementById('psiD').value);
+
+        document.getElementById('v-kappa').innerText = kappa.toFixed(2);
+        document.getElementById('v-sigma').innerText = sigma.toFixed(2);
+        document.getElementById('v-betaI').innerText = betaI.toFixed(2);
+        document.getElementById('v-betaP').innerText = betaP.toFixed(2);
+        document.getElementById('v-gamma').innerText = gamma.toFixed(1);
+        document.getElementById('v-tau').innerText = tau.toFixed(1);
+        document.getElementById('v-psiI').innerText = psiI.toFixed(2);
+        document.getElementById('v-psiD').innerText = psiD.toFixed(2);
+
+        // Precision tradeoff calculation (Prediction 3)
+        const benefit = 1 - Math.exp(-tau / tau0);
+        const cost = Math.exp(-tau / tauMax);
+        const gammaEff = gamma * benefit * cost;
+        const psiP = Math.min(gammaEff / 15, 1.0); 
+
+        let F = 0;
+        let data = [];
+        for (let i = 0; i < steps; i++) {
+            let driving = (betaI * psiI) + (betaP * psiP) + (1.5 * psiD);
+            let dF = (-kappa * F + driving) * dt + sigma * Math.sqrt(dt) * (Math.random() * 2 - 1);
+            F += dF;
+            data.push(Math.max(0, F));
+        }
+        return data;
+    }
+
+    function init() {
+        const ctx = document.getElementById('flowChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({length: steps}, (_, i) => (i * dt).toFixed(1)),
+                datasets: [{
+                    label: 'Flow Intensity F(t)',
+                    data: simulate(),
+                    borderColor: '#38bdf8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    pointRadius: 0,
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { min: 0, max: 20, grid: { color: '#1e293b' }, title: { display: true, text: 'Flow Intensity F(t) [Latent State]', color: '#94a3b8' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { color: '#1e293b' }, title: { display: true, text: 'Continuous Time (t)', color: '#94a3b8' }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        const inputs = ['kappa', 'sigma', 'betaI', 'betaP', 'gamma', 'tau', 'psiI', 'psiD'];
+        inputs.forEach(id => {
+            document.getElementById(id).addEventListener('input', () => {
+                chart.data.datasets[0].data = simulate();
+                chart.update('none');
+            });
+        });
+    }
+    window.onload = init;
+</script>
+</body>
+</html>
