@@ -66,9 +66,13 @@ pytest tests/ -v --cov=aicf
 
 ## Key References
 
-Melnikoff, D. E., Carlson, R. W., & Stillman, P. E. (2022). A computational theory of the subjective experience of flow. Nature Communications, 13, 2252. https://doi.org/10.1038/s41467-022-29742-2
-Kotler, S., Mannino, M., Kelso, J. A. S., & Huskey, R. (2022). First few seconds for flow: A comprehensive proposal of the neurobiology and neurodynamics of state onset. Neuroscience & Biobehavioral Reviews, 143, 104956. https://doi.org/10.1016/j.neubiorev.2022.104956
-Kotler, S., Parvizi-Wayne, D., Mannino, M., & Friston, K. (2025). Flow and intuition: a systems neuroscience comparison. Neuroscience of Consciousness, 2025(1), niae040.
-Hancock, F., Kee, R., Rosas, F., Girn, M., Kotler, S., Mannino, M., & Huskey, R. (2025). A Complexity-Science Framework for Studying Flow: Using Media to Probe Brain–Phenomenology Dynamics. bioRxiv, 2025-07.
-Durcan, O., Holland, P., & Bhattacharya, J. (2024). A framework for neurophysiological experiments on flow states. Communications Psychology, 2(1), 66.
+--Melnikoff, D. E., Carlson, R. W., & Stillman, P. E. (2022). A computational theory of the subjective experience of flow. Nature Communications, 13, 2252. https://doi.org/10.1038/s41467-022-29742-2
+
+--Kotler, S., Mannino, M., Kelso, J. A. S., & Huskey, R. (2022). First few seconds for flow: A comprehensive proposal of the neurobiology and neurodynamics of state onset. Neuroscience & Biobehavioral Reviews, 143, 104956. https://doi.org/10.1016/j.neubiorev.2022.104956
+
+--Kotler, S., Parvizi-Wayne, D., Mannino, M., & Friston, K. (2025). Flow and intuition: a systems neuroscience comparison. Neuroscience of Consciousness, 2025(1), niae040.
+
+--Hancock, F., Kee, R., Rosas, F., Girn, M., Kotler, S., Mannino, M., & Huskey, R. (2025). A Complexity-Science Framework for Studying Flow: Using Media to Probe Brain–Phenomenology Dynamics. bioRxiv, 2025-07.
+
+--Durcan, O., Holland, P., & Bhattacharya, J. (2024). A framework for neurophysiological experiments on flow states. Communications Psychology, 2(1), 66.
 
