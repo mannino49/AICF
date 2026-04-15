@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AICF Dashboard | Active Inference-Complexity Model of Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #020617 0%, #0f172a 100%); }
+        .card { background: rgba(30, 41, 59, 0.4); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); }
+        .regime-card { transition: all 0.2s ease-in-out; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
+        .regime-card:hover { transform: translateY(-2px); background: rgba(51, 65, 85, 0.5); }
+        .regime-card.active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.15); }
+        
+        .math-hero {
+            font-family: "Times New Roman", Times, serif;
+            letter-spacing: 0.05em;
+            color: #ffffff;
+        }
+        .math-italic { font-style: italic; }
+    </style>
+</head>
+<body class="gradient-bg text-slate-300 min-h-screen font-sans overflow-x-hidden">
+
+    <header class="p-6 border-b border-slate-800 bg-black">
+        <div class="max-w-[1600px] mx-auto flex flex-col items-center space-y-4">
+            <div class="w-full flex justify-between items-start">
+                <div class="max-w-xl">
+                    <h1 class="text-2xl font-extrabold tracking-tighter text-white">AICF <span class="text-blue-500 font-normal ml-2 text-xl">v1.0</span></h1>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed italic">
+                        A computational neuroscience framework formalizing psychological flow as a latent dynamical state driven by informational coupling, precision-weighted policy selection, and brain-dynamical complexity.
+                    </p>
+                </div>
+                <div class="text-[10px] font-mono text-slate-600 tracking-widest uppercase text-right">
+                    Lead: Michael <br>
+                    April 2026
+                </div>
+            </div>
+
+            <div class="math-hero text-xl md:text-3xl text-center whitespace-nowrap py-2">
+                <span class="math-italic">dF</span> / <span class="math-italic">dt</span> = 
+                −κ[<span class="math-italic">F(t) − F₀</span>] + 
+                β<sub class="text-sm">I</sub>ψ<sub class="text-sm">I</sub>(<span class="math-italic">t</span>) + 
+                β<sub class="text-sm">P</sub>ψ<sub class="text-sm">P</sub>(<span class="math-italic">t</span>) + 
+                β<sub class="text-sm">D</sub>ψ<sub class="text-sm">D</sub>(<span class="math-italic">t</span>) + 
+                σ<sub class="text-sm">F</sub>ξ(<span class="math-italic">t</span>)
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-[1600px] mx-auto p-4 lg:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
+            
+            <div class="lg:col-span-3 space-y-6">
+                
+                <div class="card p-6 rounded-2xl shadow-2xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-white tracking-tight">Latent Flow State <span class="math-hero italic text-blue-400">F(t)</span></h2>
+                        <div class="text-[10px] font-bold text-blue-400 tracking-widest uppercase flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                            Real-time Simulation
+                        </div>
+                    </div>
+                    <div class="h-[380px] w-full">
+                        <canvas id="flowChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <section class="card p-5 rounded-2xl">
+                        <h3 class="text-base font-bold uppercase tracking-widest text-white mb-5 border-b border-slate-700/50 pb-2">Global Constraints</h3>
+                        <div class="space-y-5">
+                            <div>
+                                <label class="flex justify-between text-[11px] mb-2 text-slate-400 uppercase">Mean Reversion (κ) <span id="kappa-val" class="font-mono text-white">0.50</span></label>
+                                <input type="range" id="kappa" min="0.1" max="2.0" step="0.05" value="0.5" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                            </div>
+                            <div>
+                                <label class="flex justify-between text-[11px] mb-2 text-slate-400 uppercase">Volatility (σF) <span id="sigma-val" class="font-mono text-white">0.05</span></label>
+                                <input type="range" id="sigma" min="0.01" max="0.3" step="0.01" value="0.05" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card p-5 rounded-2xl">
+                        <h3 class="text-base font-bold uppercase tracking-widest text-white mb-5 border-b border-slate-700/50 pb-2">Driver Sensitivity (β)</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="flex justify-between text-[11px] mb-1 text-emerald-500/80 uppercase">Informational (βI) <span id="betaI-val" class="font-mono text-white">0.8</span></label>
+                                <input type="range" id="betaI" min="0" max="2.5" step="0.1" value="0.8" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-emerald-500">
+                            </div>
+                            <div>
+                                <label class="flex justify-between text-[11px] mb-1 text-blue-500/80 uppercase">Inferential (βP) <span id="betaP-val" class="font-mono text-white">0.8</span></label>
+                                <input type="range" id="betaP" min="0" max="2.5" step="0.1" value="0.8" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                            </div>
+                            <div>
+                                <label class="flex justify-between text-[11px] mb-1 text-purple-500/80 uppercase">Dynamical (βD) <span id="betaD-val" class="font-mono text-white">0.8</span></label>
+                                <input type="range" id="betaD" min="0" max="2.5" step="0.1" value="0.8" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-500">
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="lg:col-span-1 space-y-3">
+                <h3 class="text-base font-bold uppercase tracking-[0.2em] text-blue-400 mb-1 pl-1">Model Regimes and Parameter Spaces</h3>
+                <p class="text-base text-slate-400 leading-tight mb-3 pl-1">
+                    The AICF formalizes flow as the transience of a mean-reverting process. By shifting the balance between the β coefficients, the model transitions between different psychological and operational states.
+                </p>
+                
+                <button class="regime-card card p-4 rounded-xl text-left w-full active" onclick="setRegime('flow')" id="regime-flow">
+                    <h4 class="text-sm font-bold text-white mb-1">1. Deep Flow (Optimal)</h4>
+                    <p class="text-[11px] text-slate-400 leading-snug mb-2">The "Sweet Spot." The model is highly sensitive to input across all three channels. This regime generates sustained, high-intensity flow that effectively resists the mean-reversion (κ) pull, requiring minimal conscious effort. High-intensity state where means-ends coupling and policy automaticity work in concert.</p>
+                    <div class="text-[11px] font-mono text-blue-300 border-t border-slate-700/50 pt-1 italic font-bold tracking-tight">βI=1.2, βP=1.2, βD=1.0, κ=0.4</div>
+                </button>
+
+                <button class="regime-card card p-4 rounded-xl text-left w-full" onclick="setRegime('delicate')" id="regime-delicate">
+                    <h4 class="text-sm font-bold text-white mb-1">2. Fragile Balance</h4>
+                    <p class="text-[11px] text-slate-400 leading-snug mb-2">This parameter space represents flow that is volatile and highly sensitive to disruption. While coupling (βI) is high, the model's low automaticity (βP) means that flow must be 'actively' maintained, making it fragile and quick to decay. High engagement but prone to immediate collapse from noise or distraction.</p>
+                    <div class="text-[11px] font-mono text-emerald-300 border-t border-slate-700/50 pt-1 italic font-bold tracking-tight">βI=1.5, βP=0.4, βD=0.6, κ=1.0</div>
+                </button>
+
+                <button class="regime-card card p-4 rounded-xl text-left w-full" onclick="setRegime('grind')" id="regime-grind">
+                    <h4 class="text-sm font-bold text-white mb-1">3. Deliberative Grind</h4>
+                    <p class="text-[11px] text-slate-400 leading-snug mb-2">This regime captures effortful performance rather than flow. Informational coupling (βI) is good, but policy selection (βP) is too high in "habitual" mode. The system 'grinds' forward but lacks the complex, agile signatures of true flow. High effort, low agility performance. Stable concentration through conscious habit.</p>
+                    <div class="text-[11px] font-mono text-slate-400 border-t border-slate-700/50 pt-1 italic font-bold tracking-tight">βI=1.0, βP=0.8, βD=0.1, κ=0.6</div>
+                </button>
+
+                <button class="regime-card card p-4 rounded-xl text-left w-full" onclick="setRegime('chaos')" id="regime-chaos">
+                    <h4 class="text-sm font-bold text-white mb-1">4. Chaotic Struggle</h4>
+                    <p class="text-[11px] text-slate-400 leading-snug mb-2">The "struggle" phase. While brain complexity (βD) is present, the model has low informational coupling and no automaticity. High system noise and strong mean-reversion prevent the formation of a coherent, latent flow state. High friction and volatility. Pre-flow state where structure has not yet emerged.</p>
+                    <div class="text-[11px] font-mono text-red-300 border-t border-slate-700/50 pt-1 italic font-bold tracking-tight">βI=0.3, βP=0.2, βD=1.2, κ=1.2</div>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let flowData = Array(100).fill(0.1);
+        let timeLabels = Array(100).fill(0).map((_, i) => i);
+        
+        const ctx = document.getElementById('flowChart').getContext('2d');
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: timeLabels,
+                datasets: [{
+                    label: 'Flow Intensity',
+                    data: flowData,
+                    borderColor: '#3b82f6',
+                    borderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(59, 130, 246, 0.05)',
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { min: 0, max: 8, grid: { color: 'rgba(255, 255, 255, 0.03)' }, ticks: { color: '#475569', font: { size: 9 } } },
+                    x: { display: true, title: { display: true, text: 'Time', color: '#475569', font: { size: 10 } }, ticks: { display: false } }
+                },
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        let F = 0.5;
+        const F0 = 0.2;
+        const dt = 0.1;
+
+        function updateSimulation() {
+            const kappa = parseFloat(document.getElementById('kappa').value);
+            const sigma = parseFloat(document.getElementById('sigma').value);
+            const bI = parseFloat(document.getElementById('betaI').value);
+            const bP = parseFloat(document.getElementById('betaP').value);
+            const bD = parseFloat(document.getElementById('betaD').value);
+
+            document.getElementById('kappa-val').innerText = kappa.toFixed(2);
+            document.getElementById('sigma-val').innerText = sigma.toFixed(2);
+            document.getElementById('betaI-val').innerText = bI.toFixed(1);
+            document.getElementById('betaP-val').innerText = bP.toFixed(1);
+            document.getElementById('betaD-val').innerText = bD.toFixed(1);
+
+            const psiI = 0.85 + (0.1 * Math.sin(Date.now()/3000));
+            const psiP = 0.70 + (0.15 * Math.sin(Date.now()/5000));
+            const psiD = 0.60 + (0.2 * Math.cos(Date.now()/4000));
+
+            const psiSum = (bI * psiI) + (bP * psiP) + (bD * psiD); 
+            const drift = (-kappa * (F - F0) + psiSum) * dt;
+            const diffusion = sigma * (Math.random() - 0.5) * Math.sqrt(dt);
+            
+            F += drift + diffusion;
+            if (F < 0) F = 0;
+
+            flowData.push(F);
+            flowData.shift();
+            chart.update('none');
+        }
+
+        const regimes = {
+            flow: { kappa: 0.4, sigma: 0.04, betaI: 1.2, betaP: 1.2, betaD: 1.0 },
+            delicate: { kappa: 1.0, sigma: 0.06, betaI: 1.5, betaP: 0.4, betaD: 0.6 },
+            grind: { kappa: 0.6, sigma: 0.03, betaI: 1.0, betaP: 0.8, betaD: 0.1 },
+            chaos: { kappa: 1.2, sigma: 0.15, betaI: 0.3, betaP: 0.2, betaD: 1.2 }
+        };
+
+        function setRegime(name) {
+            const config = regimes[name];
+            document.getElementById('kappa').value = config.kappa;
+            document.getElementById('sigma').value = config.sigma;
+            document.getElementById('betaI').value = config.betaI;
+            document.getElementById('betaP').value = config.betaP;
+            document.getElementById('betaD').value = config.betaD;
+
+            document.querySelectorAll('.regime-card').forEach(c => c.classList.remove('active'));
+            document.getElementById(`regime-${name}`).classList.add('active');
+        }
+
+        setRegime('flow');
+        setInterval(updateSimulation, 100);
+    </script>
+</body>
+</html>
